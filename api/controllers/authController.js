@@ -3,11 +3,11 @@ import bcryptjs from 'bcryptjs'
 import { errorhandler } from '../utils/errorHandler.js';
 
 export const signup = async (req, res, next) => {
-    const { user, email, password } = req.body;
+    const { username, email, password } = req.body;
     const hashedPass = bcryptjs.hashSync(password,2);
 
     const newUser = new User({
-        username: user,
+        username,
         email, password: hashedPass
     })
     try {
