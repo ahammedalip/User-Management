@@ -42,8 +42,12 @@ export const google = async (req, res, next) => {
     try {
         const user = await User.findOne({ email: req.body.email });
         if (user) {
-            const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET)
-            const { password: hashedPass, ...rest } = validUser._doc
+            // console.log('user.........',user) 
+
+            const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET)
+            // console.log('tojen', token)
+            const { password: hashedPass, ...rest } = user._doc
+
             const expiry = new Date(Date.now() + 3600000)
             res.cookie('acces_token', token, { httpOnly: true, expires: expiry }).status(200).json(rest)
         }
@@ -67,6 +71,7 @@ export const google = async (req, res, next) => {
             }).status(200).json(rest);
         }
     } catch (error) {
+        // console.log('error,,,,,')
         next(error)
     }
 }
