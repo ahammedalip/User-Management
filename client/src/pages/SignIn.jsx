@@ -28,13 +28,21 @@ function SignIn() {
         body: JSON.stringify(formData)
       });
       const data = await res.json()
-      console.log(data)
-      if (data.success === false) {
-        dispatch(signInFailure(data))
-        return;
+      // console.log(data)
+      // console.log(data.role)
+      if(data.role==='Admin'){
+        console.log('coming here if data.role is admin');
+        dispatch(signInSucces(data))
+        navigate('/admin')
+      }else{
+        if (data.success === false) {
+          dispatch(signInFailure(data))
+          return;
+        }
+        dispatch(signInSucces(data))
+        navigate('/')
       }
-      dispatch(signInSucces(data))
-      navigate('/')
+      
     } catch (error) {
       dispatch(signInFailure(error))
     }

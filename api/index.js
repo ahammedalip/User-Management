@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv'
 import userRoutes from './routes/userRuotes.js'
 import authRoutes from './routes/authRoute.js'
+import adminRoutes from './routes/adminRoute.js'
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 
@@ -26,7 +27,7 @@ app.listen(3000, () => {
 
 app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
-
+app.use('/api/admin', adminRoutes)
 
 app.use((err, req, res, next) =>{
     const StatusCode = err.StatusCode || 500;
