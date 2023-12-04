@@ -10,12 +10,12 @@ export const test = (req, res)=>{
 }
 
 export const updateUser = async (req,res,next) => {
-    console.log('coming here to update user controller')
-    console.log('req.user.id', req.user.id);
-    console.log('req.params.id', req.params.id);
+    // console.log('coming here to update user controller')
+    // console.log('req.user.id.......', req);
+    // console.log('req.params.id', req.params.id);
 
     if(req.user.id !== req.params.id ){
-        console.log('not equals coming');
+        // console.log('not equals coming');
         return next(errorhandler(401, 'You can update only your account!'))
     }
 
@@ -41,6 +41,20 @@ export const updateUser = async (req,res,next) => {
         res.status(200).json(rest)
     } catch (error) {
        
+        next(error)
+    }
+}
+
+// delete user
+export const deleteUser =async(req, res, next) =>{
+    if(req.user.id!== req.params.id){
+        return next(errorhandler(401, "You can delete only your account"))
+    };
+    try {
+        await User.findByIdAndDelete(req.params.id)
+        res.status(200).json('User has been deleted')
+        
+    } catch (error) {
         next(error)
     }
 }

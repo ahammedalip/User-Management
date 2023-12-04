@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase.js';
 import { useDispatch } from 'react-redux';
-import { updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/user/userSlice.js'
+import { deletUserFailure, deleteUserStart, deleteUserSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/user/userSlice.js'
 
 function Profile() {
 
@@ -66,13 +66,13 @@ function Profile() {
       dispatch(updateUserStart())
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
         method: 'POST',
-       
+
         headers: {
           'Content-Type': 'Application/json',
         },
         body: JSON.stringify(formData)
       });
-      const data =await res.json();
+      const data = await res.json();
       if (data.success === false) {
         dispatch(updateUserFailure(data))
         return;
@@ -82,6 +82,24 @@ function Profile() {
     } catch (error) {
       dispatch(updateUserFailure(error))
     }
+  }
+  const handleDeleteAccount = async () => {
+    try {
+      dispatch(deleteUserStart())
+      const res = await fetch(`/api/user/delete/${currentUser._id}`,{
+        method: 'DELETE'
+      });
+      const data = await res.json();
+      if(data.success === false){
+        dispatch(deletUserFailure(data));
+        return;
+      }
+      dispatch(deleteUserSuccess())
+    } catch (error) {
+      dispatch(deletUserFailure(error))
+
+    }
+   
   }
 
   return (
@@ -110,7 +128,7 @@ function Profile() {
         <button className=' bg-slate-600 text-white p-2 rounded-xl uppercase hover:bg-slate-700'>update</button>
       </form>
       <div className='flex justify-between'>
-        <span className='text-red-700 cursor-pointer'>Delete Account</span>
+        <span className='text-red-700 cursor-pointer' onClick={handleDeleteAccount}>Delete Account</span>
         <span className='text-red-700 cursor-pointer'>Sign Out</span>
       </div>
       <p className='text-green-700 mt-5 text-center'> {updateSuccess && 'Update success'} </p>
