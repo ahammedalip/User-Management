@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage'
 import { app } from '../firebase.js';
 import { useDispatch } from 'react-redux';
-import { deletUserFailure, deleteUserStart, deleteUserSuccess, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/user/userSlice.js'
-
+import { deletUserFailure, deleteUserStart, deleteUserSuccess, signout, updateUserFailure, updateUserStart, updateUserSuccess } from '../redux/user/userSlice.js'
+import toast, { Toaster } from 'react-hot-toast';
 function Profile() {
 
   const fileRef = useRef(null);
@@ -61,7 +61,6 @@ function Profile() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       dispatch(updateUserStart())
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
@@ -75,8 +74,10 @@ function Profile() {
       const data = await res.json();
       if (data.success === false) {
         dispatch(updateUserFailure(data))
+        toast.error('Something went wrong')
         return;
       }
+      toast.success('Updated succesfully')
       dispatch(updateUserSuccess(data))
       setUpdateSuccess(true)
     } catch (error) {
@@ -85,21 +86,34 @@ function Profile() {
   }
   const handleDeleteAccount = async () => {
     try {
+
       dispatch(deleteUserStart())
-      const res = await fetch(`/api/user/delete/${currentUser._id}`,{
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
         method: 'DELETE'
       });
       const data = await res.json();
-      if(data.success === false){
+      if (data.success === false) {
         dispatch(deletUserFailure(data));
+
         return;
       }
+      toast.success('User deleted succesfully')
       dispatch(deleteUserSuccess())
+
     } catch (error) {
       dispatch(deletUserFailure(error))
-
     }
-   
+  }
+
+  const handleSignOut = async () => {
+    try {
+
+      await fetch('/api/auth/signout')
+      toast.success('Logged out succesfully')
+      dispatch(signout())
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -129,7 +143,7 @@ function Profile() {
       </form>
       <div className='flex justify-between'>
         <span className='text-red-700 cursor-pointer' onClick={handleDeleteAccount}>Delete Account</span>
-        <span className='text-red-700 cursor-pointer'>Sign Out</span>
+        <span className='text-red-700 cursor-pointer' onClick={handleSignOut}>Sign Out</span>
       </div>
       <p className='text-green-700 mt-5 text-center'> {updateSuccess && 'Update success'} </p>
       <p className='text-red-700 mt-5 text-center'> {error && 'Something went wrong!'} </p>
