@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import userRoutes from './routes/userRuotes.js'
 import authRoutes from './routes/authRoute.js'
 import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
 
 dotenv.config();
 
@@ -17,6 +18,7 @@ const app = express();
 
 app.use(express.json());
 app.use(cookieParser())
+app.use(morgan('tiny'));
 
 app.listen(3000, () => {
     console.log('Server listening on port 3000')
