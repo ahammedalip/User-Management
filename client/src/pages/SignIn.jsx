@@ -8,15 +8,30 @@ function SignIn() {
 
   const [formData, setFormData] = useState({});
   const {loading, error} = useSelector((state)=> state.user)
+  const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value })
   }
   const handleSubmit = async (e) => {
+   
+  
     e.preventDefault();
+    
+    // if(error){
+    //   setErrorMessage(error)
+    //   return
+    // }
+
+    if(!formData.email || !formData.password){
+
+      setErrorMessage('Enter email and password')
+      return null
+    }
     try {
       dispatch(signInStart())
       
@@ -28,10 +43,10 @@ function SignIn() {
         body: JSON.stringify(formData)
       });
       const data = await res.json()
-      // console.log(data)
-      // console.log(data.role)
+      console.log(data)
+      setErrorMessage(data.message)
+ 
       if(data.role==='Admin'){
-        console.log('coming here if data.role is admin');
         dispatch(signInSucces(data))
         navigate('/admin')
       }else{
@@ -44,6 +59,7 @@ function SignIn() {
       }
       
     } catch (error) {
+      console.log('coming here at sign in error block', error.message)
       dispatch(signInFailure(error))
     }
   }
@@ -67,8 +83,11 @@ function SignIn() {
             <span className='text-blue-500'>Sign Up</span>
           </Link>
         </div>
-        <p className='text-red-500'>
-          {error ? error.message  || 'Something went wrong!' : ''}
+        {/* <p className='text-red-500'>
+          {error ? error.message   : ''}
+          </p> */}
+          <p className='text-red-500'>
+          {errorMessage ? errorMessage   : ''}
           </p>
       </div>
     </div>

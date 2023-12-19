@@ -16,6 +16,12 @@ export const signup = async (req, res, next) => {
         res.status(201).json({ message: 'User created succesfully' })
 
     } catch (error) {
+        console.log(error.message)
+        const message = 'Email already registered, Use new email for registering';
+        if(error.code=== 11000){
+        error.message = message
+        }
+        console.log(error.message);
         next(error);
     }
 }
@@ -24,7 +30,11 @@ export const signin = async (req, res, next) => {
     const { email, password } = req.body;
     try {
         const validUser = await User.findOne({ email })
+        console.log('user--------------',validUser);
         if (!validUser) return next(errorhandler(401, 'User not found'))
+        if(validUser.isBlocked=== 'Blocked') return next(errorhandler(500, 'User is blocked, Contact admin'))
+
+        
         const validPass = bcryptjs.compareSync(password, validUser.password)
         if (!validPass) return next(errorhandler(401, 'Wrong credentials')) 
         const token = jwt.sign({ id: validUser._id }, process.env.JWT_SECRET)

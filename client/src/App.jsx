@@ -8,6 +8,7 @@ import Header from './Components/Header'
 import PrivateRoute from './Components/PrivateRoute'
 import VerifyAdmin from './Components/VerifyAdmin'
 import Admin from './pages/Admin'
+import AddUser from './pages/AddUser'
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         </Route>
         <Route element ={<VerifyAdmin/>}>
           <Route path='/admin' element={<Admin/> }></Route>
+          <Route path= '/admin/adduser' element= { <AddUser/> }></Route>
         </Route>
       </Routes>
     </BrowserRouter>

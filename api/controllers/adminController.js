@@ -40,10 +40,10 @@ export const makeAdmin = async (req, res) => {
 
 export const blockUser = async (req, res) => {
     const { id } = req.params;
-    console.log('id here', id)
+    // console.log('id here', id)
     try {
         const user = await User.findById(id);
-        console.log('tocheck blocked or not',user);
+        // console.log('tocheck blocked or not',user);
         if (!user) {
             return res.status(404).json({ success: false, message: "User not found" })
         }

@@ -8,15 +8,21 @@ function SignUp() {
   const [formData, setFormData] = useState({})
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false)
+  const [customError, setCustomError] = useState('')
 const navigate = useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value })
+    console.log(formData)
   }
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(false)
+    if(!formData.username || !formData.email || !formData.password){
+      setError('Enter credentials')
+      return
+    }
 
     try {
       setLoading(true);
@@ -29,6 +35,10 @@ const navigate = useNavigate();
       });
       const data = await res.json();
       console.log(data);
+      if(data.success === false){
+        console.log('ciming here ');
+        setCustomError(data.message)
+      }
       setLoading(false);
       if (data.success == false) {
         setError(true)
@@ -68,7 +78,9 @@ const navigate = useNavigate();
             <span className='text-blue-500'>Sign in</span>
           </Link>
         </div>
-        <p className='text-red-500'>{error && "Something went wrong!"}</p>
+        <p className='text-red-500'>{customError ? customError : ''}</p>
+        <p className='text-red-500'>{error ? error : ''}</p>
+
       </div>
 
 
