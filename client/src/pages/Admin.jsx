@@ -68,14 +68,14 @@ function Admin() {
 
     return (
         <div className='pt-4 ml-7 mr-7'>
-            {/* <div className="mb-3">
+            <div className="mb-3">
                 <Link to='/admin/adduser' > <button
                     className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none"
                 >
                     Add User
                 </button></Link>
 
-            </div> */}
+            </div>
             <div className="flex items-center space-x-2">
                 <input
                     type="text"
